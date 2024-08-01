@@ -16,9 +16,14 @@ class PyObjectId(ObjectId):
         return ObjectId(v)
 
     @classmethod
-    def __modify_schema__(cls, field_schema):
-        field_schema.update(type="string")
+    def __get_pydantic_json_schema__(cls, schema):
+        schema.update({
+            'type': 'string',
+            'format': 'objectid',
+            'example': '60b8d2958f62ce5e7f43e57c'
+        })
 
+# Base model for User
 class UserBase(BaseModel):
     username: str = Field(..., max_length=30)
     email: EmailStr
