@@ -1,6 +1,6 @@
-from .models import get_user_collection, get_conversation_collection, get_message_collection
-from .schemas import UserCreate, User, ConversationCreate, Conversation, MessageCreate, Message
-from .utils import hash_password
+from app.models import get_user_collection, get_conversation_collection, get_message_collection
+from app.schemas import UserCreate, User, ConversationCreate, Conversation, MessageCreate, Message
+from app.utils import hash_password
 from datetime import datetime
 from bson import ObjectId
 import uuid
