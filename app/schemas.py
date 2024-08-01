@@ -4,6 +4,7 @@ from typing import List, Optional, Dict
 from datetime import datetime
 from bson import ObjectId
 
+# Custom ObjectId validator for Pydantic models
 class PyObjectId(ObjectId):
     @classmethod
     def __get_validators__(cls):
@@ -19,15 +20,17 @@ class PyObjectId(ObjectId):
     def __modify_schema__(cls, field_schema):
         field_schema.update(type="string")
 
+# Base model for User
 class UserBase(BaseModel):
     username: str = Field(..., max_length=30)
     email: EmailStr
 
+# Model for creating a new user
 class UserCreate(UserBase):
     password: str = Field(
         ...,
         min_length=8,
-        regex=r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$",
+        pattern=r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$",
         description="Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, a number, and a special character."
     )
     profile_picture_url: Optional[str] = None
@@ -38,6 +41,7 @@ class UserCreate(UserBase):
             raise ValueError("Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, a number, and a special character.")
         return value
 
+# Model for returning user data
 class User(UserBase):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
     hashed_password: str
@@ -53,16 +57,19 @@ class User(UserBase):
             datetime: lambda v: v.isoformat()
         }
 
+# Base model for Conversation
 class ConversationBase(BaseModel):
     name: Optional[str] = None
     description: Optional[str] = None
     icon: Optional[str] = None
-    type: Optional[str] = None  # e.g., group, private, direct
+    type: Optional[str] = None
     participants: List[PyObjectId]
 
+# Model for creating a new conversation
 class ConversationCreate(ConversationBase):
     pass
 
+# Model for returning conversation data
 class Conversation(ConversationBase):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
     created_at: datetime
@@ -75,14 +82,17 @@ class Conversation(ConversationBase):
             datetime: lambda v: v.isoformat()
         }
 
+# Base model for Message
 class MessageBase(BaseModel):
     content: str
     attachments: Optional[List[dict]] = None
 
+# Model for creating a new message
 class MessageCreate(MessageBase):
     conversation_id: PyObjectId
     sender_id: PyObjectId
 
+# Model for returning message data
 class Message(MessageBase):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
     conversation_id: PyObjectId
@@ -99,6 +109,7 @@ class Message(MessageBase):
             datetime: lambda v: v.isoformat()
         }
 
+# Models for password reset functionality
 class PasswordResetRequest(BaseModel):
     email: EmailStr
 
@@ -107,5 +118,5 @@ class PasswordReset(BaseModel):
     new_password: str = Field(
         ...,
         min_length=8,
-        regex=r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$"
+        pattern=r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$"
     )

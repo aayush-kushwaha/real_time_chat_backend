@@ -1,10 +1,10 @@
 from fastapi import FastAPI, Depends, HTTPException, status, WebSocket, WebSocketDisconnect
 from fastapi.security import OAuth2PasswordRequestForm
 from typing import List
-from .schemas import UserCreate, User, Token, ConversationCreate, Conversation, MessageCreate, Message, PasswordResetRequest, PasswordReset
-from .crud import create_user, get_user_by_id, create_conversation, get_conversation, create_message, get_messages, generate_password_reset_token, reset_password
-from .auth import create_access_token, authenticate_user, get_current_user, ACCESS_TOKEN_EXPIRE_MINUTES
-from .websocket import manager
+from schemas import UserCreate, User, Token, ConversationCreate, Conversation, MessageCreate, Message, PasswordResetRequest, PasswordReset
+from crud import create_user, get_user_by_id, create_conversation, get_conversation, create_message, get_messages, generate_password_reset_token, reset_password
+from auth import create_access_token, authenticate_user, get_current_user, ACCESS_TOKEN_EXPIRE_MINUTES
+from websocket import manager
 from datetime import timedelta
 from bson import ObjectId
 import uvicorn
