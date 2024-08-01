@@ -23,6 +23,15 @@ class PyObjectId(ObjectId):
             'example': '60b8d2958f62ce5e7f43e57c'
         })
 
+# Define a Token model
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+# Define a TokenData model for additional token-related information
+class TokenData(BaseModel):
+    username: Optional[str] = None
+
 # Base model for User
 class UserBase(BaseModel):
     username: str = Field(..., max_length=30)
